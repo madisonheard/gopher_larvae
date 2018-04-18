@@ -128,15 +128,14 @@ $(document).ready(function () {
 <p>Load libaries</p>
 <pre class="r"><code>#install.packages(&quot;tidyverse&quot;)
 library(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ───────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
-<pre><code>## ✔ ggplot2 2.2.1.9000     ✔ purrr   0.2.4     
-## ✔ tibble  1.4.2          ✔ dplyr   0.7.4     
-## ✔ tidyr   0.8.0          ✔ stringr 1.3.0     
-## ✔ readr   1.1.1          ✔ forcats 0.3.0</code></pre>
-<pre><code>## ── Conflicts ──────────────────────────────────────────── tidyverse_conflicts() ──
+<pre><code>## ── Attaching packages ──────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ✔ ggplot2 2.2.1     ✔ purrr   0.2.4
+## ✔ tibble  1.4.2     ✔ dplyr   0.7.4
+## ✔ tidyr   0.8.0     ✔ stringr 1.3.0
+## ✔ readr   1.1.1     ✔ forcats 0.3.0</code></pre>
+<pre><code>## ── Conflicts ─────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()
-## ✖ dplyr::vars()   masks ggplot2::vars()</code></pre>
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <p>Read in data</p>
 <pre class="r"><code>ldh&lt;-read_csv(&quot;ldh_test&quot;)</code></pre>
 <pre><code>## Warning: Missing column names filled in: 'X6' [6], 'X7' [7], 'X8' [8],
@@ -198,25 +197,26 @@ head(ldh)</code></pre>
 <p>Try different approach…</p>
 <p>Run ANOVA on a single mother. First filter out single mom’s dataset</p>
 <pre class="r"><code>ldh_G79 &lt;- ldh %&gt;%
-  filter(mother==&quot;G79&quot;) %&gt;% # pull out data from a single mom
-  drop_na  # remove na's
+  filter(mother==&quot;G79&quot;)  # pull out data from a single mom</code></pre>
+<pre><code>## Warning: package 'bindrcpp' was built under R version 3.4.4</code></pre>
+<pre class="r"><code>  # drop_na  # remove na's to remove day 1 only data
 
 head(ldh_G79)</code></pre>
 <pre><code>## # A tibble: 6 x 4
 ##   ldh_activity mother larval_treat_d1 larval_treat_d5
 ##          &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;           &lt;chr&gt;          
-## 1         8.00 G79    DO              DO             
-## 2        10.2  G79    DO              DO             
-## 3         7.40 G79    DO              DO             
-## 4         6.37 G79    DO              DO             
-## 5         5.01 G79    DO              DO             
-## 6        10.3  G79    DO              DO</code></pre>
+## 1        12.5  G79    DO              &lt;NA&gt;           
+## 2        11.6  G79    DO              &lt;NA&gt;           
+## 3        13.2  G79    DO              &lt;NA&gt;           
+## 4         9.66 G79    DO              &lt;NA&gt;           
+## 5        14.6  G79    DO              &lt;NA&gt;           
+## 6        10.2  G79    DO              &lt;NA&gt;</code></pre>
 <p>Try ANOVA – <strong>Maddie: ask Judith about this. I’m not sure I’ve set up the test correctly</strong></p>
 <pre class="r"><code>model &lt;- aov(data=ldh_G79,ldh_activity~factor(larval_treat_d1)*factor(larval_treat_d5))
 anova(model)
 
 head(ldh_G79)</code></pre>
-<p>Try running ANOVA on full dataset - this works, but it’s not filtered by mother</p>
+<p>Try running ANOVA on full dataset - <strong>this works</strong>, but it’s not filtered by mother</p>
 <pre class="r"><code>model&lt;-aov(data=ldh,ldh_activity~factor(larval_treat_d1)*factor(mother))
 anova(model)</code></pre>
 <pre><code>## Analysis of Variance Table

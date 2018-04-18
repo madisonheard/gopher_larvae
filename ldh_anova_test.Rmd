@@ -47,8 +47,8 @@ ldh_mom <- ldh %>%
  Run ANOVA on a single mother. First filter out single mom's dataset
 ```{r}
 ldh_G79 <- ldh %>%
-  filter(mother=="G79") %>% # pull out data from a single mom
-  drop_na  # remove na's
+  filter(mother=="G79")  # pull out data from a single mom
+  # drop_na  # remove na's to remove day 1 only data
 
 head(ldh_G79)
 ```
@@ -61,7 +61,7 @@ anova(model)
 head(ldh_G79)
 ```
 
-Try running ANOVA on full dataset - this works, but it's not filtered by mother
+Try running ANOVA on full dataset - **this works**, but it's not filtered by mother
 ```{r}
 model<-aov(data=ldh,ldh_activity~factor(larval_treat_d1)*factor(mother))
 anova(model)
