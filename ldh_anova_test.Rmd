@@ -35,7 +35,7 @@ head(ldh)
 
 Run ANOVA on each mom's dataset using `group_by`
 *Note ***this is not working yet...(may need to change column format?): ask Judith**
-```{r}
+```{r, eval = FALSE}
 ldh_mom <- ldh %>%
   group_by(mother) %>%
   aov(ldh_activity~factor(larval_treat_d1)*factor(larval_treat_d5)) %>%
@@ -48,11 +48,13 @@ ldh_mom <- ldh %>%
 ```{r}
 ldh_G79 <- ldh %>%
   filter(mother=="G79") %>% # pull out data from a single mom
-  drop_na %>% # remove na's
+  drop_na  # remove na's
+
+head(ldh_G79)
 ```
 
 Try ANOVA -- **Maddie: ask Judith about this. I'm not sure I've set up the test correctly**
-```{r}
+```{r, eval = FALSE}
 model <- aov(data=ldh_G79,ldh_activity~factor(larval_treat_d1)*factor(larval_treat_d5))
 anova(model)
 
