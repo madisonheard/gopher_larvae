@@ -32,12 +32,36 @@ ldh<-ldh%>%
 head(ldh)
 ```
 
+
 Run ANOVA on each mom's dataset using `group_by`
-Note this is not working yet...(may need to change column format?)
+*Note ***this is not working yet...(may need to change column format?): ask Judith**
 ```{r}
-ldh_mom<-ldh%>%
+ldh_mom <- ldh %>%
   group_by(mother) %>%
-  model<-aov(ldh_activity~factor(larval_treat_d1)*factor(larval_treat_d5)) %>%
-  anova(model)
+  aov(ldh_activity~factor(larval_treat_d1)*factor(larval_treat_d5)) %>%
+  anova()
+``` 
+ 
+ Try different approach...
+ 
+ Run ANOVA on a single mother. First filter out single mom's dataset
+```{r}
+ldh_G79 <- ldh %>%
+  filter(mother=="G79") %>% # pull out data from a single mom
+  drop_na %>% # remove na's
+```
+
+Try ANOVA -- **Maddie: ask Judith about this. I'm not sure I've set up the test correctly**
+```{r}
+model <- aov(data=ldh_G79,ldh_activity~factor(larval_treat_d1)*factor(larval_treat_d5))
+anova(model)
+
+head(ldh_G79)
+```
+
+Try running ANOVA on full dataset - this works, but it's not filtered by mother
+```{r}
+model<-aov(data=ldh,ldh_activity~factor(larval_treat_d1)*factor(mother))
+anova(model)
 ```
 
