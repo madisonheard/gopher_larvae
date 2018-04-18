@@ -1,0 +1,33 @@
+---
+title: "Data wrangling"
+author: "Maddie Heard"
+date: "4/18/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+#install.packages("tidyverse")
+library(tidyverse)
+```
+```{r}
+ldh<-read_csv("ldh_test")
+View(ldh)
+```
+
+```{r}
+ldh<-ldh%>%
+  select(ldh_activity, mother, larval_treat_d1, larval_treat_d5)
+View(ldh)
+```
+
+```{r}
+ldh_mom<-ldh%>%
+  group_by(mother)%>%
+  #anova code here
+  model<-aov(ldh_activity~factor(larval_treat_d1)*factor(larval_treat_d5))%>%
+  anova(model)
+```
+
