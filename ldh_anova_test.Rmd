@@ -5,29 +5,39 @@ date: "4/18/2018"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+Load libaries
 ```{r}
 #install.packages("tidyverse")
 library(tidyverse)
 ```
+
+Read in data
 ```{r}
 ldh<-read_csv("ldh_test")
-View(ldh)
+head(ldh)  # can also use View
 ```
 
+Select columns of interest using `select`
 ```{r}
 ldh<-ldh%>%
   select(ldh_activity, mother, larval_treat_d1, larval_treat_d5)
-View(ldh)
+head(ldh)
 ```
 
+Remove NAs in 'ldh_activity' column only
+```{r}
+ldh<-ldh%>%
+  drop_na(ldh_activity)
+
+head(ldh)
+```
+
+Run ANOVA on each mom's dataset using `group_by`
+Note this is not working yet...(may need to change column format?)
 ```{r}
 ldh_mom<-ldh%>%
-  group_by(mother)%>%
-  #anova code here
-  model<-aov(ldh_activity~factor(larval_treat_d1)*factor(larval_treat_d5))%>%
+  group_by(mother) %>%
+  model<-aov(ldh_activity~factor(larval_treat_d1)*factor(larval_treat_d5)) %>%
   anova(model)
 ```
 
