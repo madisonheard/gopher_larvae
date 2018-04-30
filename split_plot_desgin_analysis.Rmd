@@ -1,0 +1,12 @@
+---
+title: "split_plot_design_analysis"
+author: "Maddie Heard"
+date: "4/30/2018"
+output: html_document
+---
+
+```{r}
+#to run analysis on ratio
+sp.ratio<-read.csv("ratio_activity_R.csv")
+```
+

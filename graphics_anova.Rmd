@@ -1,0 +1,80 @@
+---
+title: "cs_activity_analysis"
+author: "Maddie Heard"
+date: "4/30/2018"
+output: html_document
+---
+
+```{r}
+
+## Jake's Enzyme and Hematocrit Data Analysis Code, using ANOVA
+#change the file pathway to your own
+getwd()
+setwd("/Users/madisonheard/github/gopher_larvae")
+
+#to run ratio activity data
+mydata = read.csv("ratio_activity_R.csv", header=TRUE,stringsAsFactors = FALSE)
+mydata
+```
+
+```{r}
+# Install this package to make use of the %>% pipe operator and other stuff.
+install.packages("magrittr")
+library(magrittr)
+```
+
+
+```{r}
+
+# Install this package to use group_by and other stuff.
+install.packages("dplyr")
+library(dplyr)
+
+#my project will need to be grouped some other way -- maybe mother?
+#Average function? What does this mean?
+group_by(mydata, mother) %>%
+     summarize(
+         count = n(),
+         mean = mean(Average, na.rm=TRUE),
+         sd = sd(Average, na.rm=TRUE)
+     )
+#to create a table with only ratio_activity, mother and the larval treatment columns
+ratio<-mydata%>%
+  select(ratio_activity, mother, d1_treat, d5_treat)
+View(ratio)
+
+```
+
+```{r}
+#STILL NEED TO FIX THE REST OF THIS CODE
+## To manually reorder the treatments in the boxplot:
+
+mydata$Treatment = factor(mydata$Treatment,c("C","M","E","R","U")) 
+    
+boxplot(Average ~ Treatment, mydata, range = 0, main="Humboldt Year 3 - Upwelling\nBlack Rockfish Hematocrit", xlab="Treatment",ylab="Hematocrit (Erythrocyte %)",ylim=c(.3,.6))
+```
+
+
+```{r}
+# To add dots representing the means. Boxplots show the median, quartiles and min&max.
+
+means <- by(mydata$Average, mydata$Treatment, mean)
+points(1:5, means, pch = 21, cex =1.5, bg = "blue")
+```
+
+
+```{r}
+## ANOVA Code
+
+humboldt_aov=aov(Average~Treatment,mydata)
+summary(humboldt_aov)
+
+```
+
+```{r}
+## Tukey post-hoc pairwise comparisons of means
+
+TukeyHSD(humboldt_aov)
+```
+
+

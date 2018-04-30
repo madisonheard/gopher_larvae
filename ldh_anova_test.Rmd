@@ -13,15 +13,16 @@ library(tidyverse)
 
 Read in data
 ```{r}
-ldh<-read_csv("ldh_test")
+ldh<-read_csv("ldh_activity_R.csv")
 head(ldh)  # can also use View
+View(ldh)
+names(ldh)
 ```
 
 Select columns of interest using `select`
 ```{r}
 ldh<-ldh%>%
-  select(ldh_activity, mother, larval_treat_d1, larval_treat_d5)
-head(ldh)
+  select(ldh_activity, mother, d1_treat, d5_treat)
 ```
 
 Remove NAs in 'ldh_activity' column only
@@ -38,7 +39,7 @@ Run ANOVA on each mom's dataset using `group_by`
 ```{r, eval = FALSE}
 ldh_mom <- ldh %>%
   group_by(mother) %>%
-  aov(ldh_activity~factor(larval_treat_d1)*factor(larval_treat_d5)) %>%
+  aov(ldh_activity~factor(d1_treat)*factor(d5_treat)) %>%
   anova()
 ``` 
  
@@ -55,7 +56,7 @@ head(ldh_G79)
 
 Try ANOVA -- **Maddie: ask Judith about this. I'm not sure I've set up the test correctly**
 ```{r, eval = FALSE}
-model <- aov(data=ldh_G79,ldh_activity~factor(larval_treat_d1)*factor(larval_treat_d5))
+model <- aov(data=ldh_G79,ldh_activity~factor(d1_treat)*factor(d5_treat))
 anova(model)
 
 head(ldh_G79)
@@ -63,7 +64,7 @@ head(ldh_G79)
 
 Try running ANOVA on full dataset - **this works**, but it's not filtered by mother
 ```{r}
-model<-aov(data=ldh,ldh_activity~factor(larval_treat_d1)*factor(mother))
+model<-aov(data=ldh,ldh_activity~factor(d1_treat)*factor(mother))
 anova(model)
 ```
 
