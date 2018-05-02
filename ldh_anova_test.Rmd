@@ -14,8 +14,8 @@ library(tidyverse)
 Read in data
 ```{r}
 ldh<-read_csv("ldh_activity_R.csv")
-head(ldh)  # can also use View
 View(ldh)
+ldh<-ldh[,1:5]
 names(ldh)
 ```
 
@@ -30,7 +30,7 @@ Remove NAs in 'ldh_activity' column only
 ldh<-ldh%>%
   drop_na(ldh_activity)
 
-head(ldh)
+View(ldh)
 ```
 
 

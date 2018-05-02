@@ -5,8 +5,295 @@ date: "4/30/2018"
 output: html_document
 ---
 
+#Load your data!
 ```{r}
+cs<-read.csv("cs_capstone.csv")
+summary(cs)
+View(cs)
+```
 
+#Test for normality!
+```{r}
+#this shows the normality of the data (p<0.05 means data is not normal - must transform!)
+shapiro.test(cs$cs_activity)
+#this also shows normality. The more points on the line the more normal data is.
+qqnorm(cs$cs_activity)
+qqline(cs$cs_activity)
+```
+
+
+#summary statistics on raw data
+```{r}
+summary(cs)
+names(cs)
+length(cs)
+summary(cs$cs_activity)
+```
+
+There are a lot of NA's in this data frame so let's remove them....
+
+#remove NAs from data
+```{r}
+cs_newdata<-na.omit(cs)
+#check to see if NAs still remain
+View(cs_newdata)
+```
+
+#summary statistics on cleaned-up data frame
+```{r}
+summary(cs_newdata)
+#HOW DO YOU GET RID OF THESE PHANTOM CATEGORIES?!
+summary(cs$cs_activity)
+mean(cs_newdata$cs_activity)
+sd(cs_newdata$cs_activity)
+hist(cs$cs_activity, main = "Histogram of CS all Activity", xlab="CS Activity")
+```
+
+#SUBSET DATA for activity by mother (does not include timepoint)
+```{r}
+G72=cs_newdata$cs_activity[cs_newdata$mother=="G72"]
+G73=cs_newdata$cs_activity[cs_newdata$mother=="G73"]
+G79=cs_newdata$cs_activity[cs_newdata$mother=="G79"]
+G91=cs_newdata$cs_activity[cs_newdata$mother=="G91"]
+```
+
+
+
+#Activity at day 1 seaparated by mother and treatment
+```{r}
+#figure out what this extra space is from maybe 
+boxplot(cs_newdata$cs_activity~cs_newdata$d1_treat*cs_newdata$mother, horizontal = TRUE, main ="CS Activity at birth separated by Mother", xlab = "CS Activity", ylab="Mother")
+```
+
+
+
+#CS Activity at birth and day 5 seaparated by mother
+```{r}
+boxplot(cs_newdata$cs_activity ~ cs_newdata$mother, horizontal = TRUE, main ="All CS Activity separated by mother", xlab = "CS Activity", ylab="Mother")
+```
+
+
+
+#Activity at Day 1 separated by treatment
+```{r}
+boxplot(cs_newdata$cs_activity ~ cs_newdata$d1_treat, horizontal = TRUE, main="CS Activity at Day 1 separated by treatment", xlab = "CS Activity", ylab = "Treatment")
+```
+
+
+
+#Activity at Day 1 separated by treatment
+```{r}
+boxplot(cs_newdata$cs_activity ~ cs_newdata$d1_treat, horizontal = TRUE, main="CS Activity at Day 1 separated by treatment", xlab = "CS Activity", ylab = "Treatment")
+```
+
+
+
+#Activity at Day 5 separated by treatment
+```{r}
+boxplot(cs_newdata$cs_activity ~ cs_newdata$d5_treat, horizontal = TRUE, main="CS Activity at Day 5 separated by treatment", xlab = "CS Activity", ylab = "Treatment")
+```
+
+
+
+#Activity at Day 5 separated by treatment and mother
+```{r}
+boxplot(cs_newdata$cs_activity ~ cs_newdata$d5_treat*cs_newdata$mother, horizontal = TRUE, main="CS Activity at Day 5 separated by treatment and mother", xlab = "CS Activity", ylab = "Treatment")
+```
+
+
+
+#CS Activity at day 5 separated by mother
+```{r}
+boxplot(cs_newdata$cs_activity ~ cs_newdata$d5_treat*cs_newdata$mother, horizontal = TRUE, main ="All CS Activity separated by mother", xlab = "CS Activity", ylab="Mother")
+```
+
+
+
+
+Example boxplot using Rob Burton's code
+```{r}
+y_1998=subset(grass_1998_2014,grass_1998_2014$Year=='1998')
+y_2004=subset(grass_1998_2014,grass_1998_2014$Year=='2004')
+
+d1_con=subset(cs_newdata,cs_newdata$d1_treat=="con")
+d1_hyp=subset(cs_newdata,cs_newdata$d1_treat=="hyp")
+
+G72_d1=G72$d1_treat
+G72_d5
+G73_d1
+G73_d5
+G79_d1
+G79_d5
+D91_d1
+G91_d5
+
+
+mass=y_2004$Biomass_g
+treatment=y_2004$Treatment
+plot=y_2004$Plot_ID
+
+
+plot_title="Effect of passive grazing on biomass plots 1 - 5, 1998"
+
+#Run a generic boxplot to make sure everythin is in order and also to get x and y limits
+boxplot(mass ~ treatment * plot) # Check and make sure that you have treatment order correct
+
+#Adjust and run actual plot
+boxplot(mass ~ treatment * plot, col=c("chartreuse1","dark green"),xaxt='n', ann=FALSE,yaxt='n', ann=FALSE)
+
+axis(2, at = seq(0, 100, by = 10), las=2)
+#x axis for 5 plots
+axis(1, at= seq(1,10, by = 1),labels=c("Plot 1","","Plot 2","","Plot 3","","Plot 4","","Plot 5",""))
+
+#x axis for 9 plots
+legend(8,80,c("Grazed","Ungrazed"),
+      bty = "n",col=c("chartreuse1","dark green"),
+      lwd=c(3),cex=0.8)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##LDH Graphics and Summary Statistics
+```{r}
+ldh<-read.csv("ldh_capstone.csv")
+summary(ldh)
+summary(ldh$ldh_activity)
+
+hist(ldh$ldh_activity, xlab="LDH Activity")
+
+
+#this shows the normality of the data (p<0.05 means data is not normal - must transform!)
+shapiro.test(ldh$ldh_activity)
+#this also shows normality. The more points on the line the more normal data is.
+qqnorm(ldh$ldh_activity)
+qqline(ldh$ldh_activity)
+
+#remove NAs from data
+ldh_newdata<-na.omit(ldh)
+#check to see if NAs still remain
+View(ldh_newdata)
+summary(ldh_newdata)
+
+mean(ldh_newdata$ldh_activity)
+
+
+
+
+#Activity at birth and day 5 seaparated by mother
+boxplot(ldh_newdata$ldh_activity ~ ldh_newdata$mother, horizontal = TRUE, main ="All LDH Activity separated by Mother", xlab = "LDH Activity", ylab="Mother")
+
+
+#Activity at Day 1 separated by treatment
+boxplot(ldh_newdata$ldh_activity ~ ldh_newdata$d1_treat, horizontal = TRUE, main="LDH Activity at Day 1", xlab = "LDH Activity", ylab = "Treatment")
+
+#Activity at Day 5 separated by treatment
+boxplot(ldh_newdata$ldh_activity ~ ldh_newdata$d5_treat, horizontal = TRUE, main="LDH Activity at Day 5", xlab = "LDH Activity", ylab = "Treatment")
+
+
+
+```
+
+
+
+
+
+Ratio Graphics and Summary Statistics
+```{r}
+ratio<-read.csv("ratio_capstone.csv")
+summary(ratio)
+summary(ratio$ratio_activity)
+
+hist(ratio$ratio_activity, xlab="Ratio Activity")
+
+
+#this shows the normality of the data (p<0.05 means data is not normal - must transform!)
+shapiro.test(ratio$ratio_activity)
+#this also shows normality. The more points on the line the more normal data is.
+qqnorm(ratio$ratio_activity)
+qqline(ratio$ratio_activity)
+
+#remove NAs from data
+ratio_newdata<-na.omit(ratio)
+#check to see if NAs still remain
+View(ratio_newdata)
+summary(ratio_newdata)
+
+mean(ratio_newdata$ratio_activity)
+
+
+
+
+#SUBSET DATA 
+G72=subset(ratio_newdata, ratio_newdata$mother == "G72")
+G73=subset(ratio_newdata, ratio_newdata$mother == "G73")
+G79=subset(ratio_newdata, ratio_newdata$mother == "G79")
+G91=subset(ratio_newdata, ratio_newdata$mother == "G91")
+
+
+#Activity at day 1 seaparated by mother and treatment
+boxplot(ratio_newdata$ratio_activity~ratio_newdata$d1_treat*ratio_newdata$mother, horizontal = TRUE, main ="CS/LDH at birth separated by Mother", xlab = "Ratio Activity", ylab="Mother")
+
+#CS Activity at birth and day 5 seaparated by mother
+boxplot(ratio_newdata$ratio_activity ~ ratio_newdata$mother, horizontal = TRUE, main ="All Ratio Activity separated by mother", xlab = "Ratio Activity", ylab="Mother")
+
+#Activity at Day 1 separated by treatment
+boxplot(ratio_newdata$ratio_activity ~ ratio_newdata$d1_treat, horizontal = TRUE, main="Ratio Activity at Day 1 separated by treatment", xlab = "Ratio Activity", ylab = "Treatment")
+
+#Activity at Day 1 separated by treatment
+boxplot(ratio_newdata$ratio_activity ~ ratio_newdata$d1_treat, horizontal = TRUE, main="Ratio Activity at Day 1 separated by treatment", xlab = "Ratio Activity", ylab = "Treatment")
+
+#Activity at Day 5 separated by treatment
+boxplot(ratio_newdata$ratio_activity ~ ratio_newdata$d5_treat, horizontal = TRUE, main="Ratio Activity at Day 5 separated by treatment", xlab = "Ratio Activity", ylab = "Treatment")
+
+#Activity at Day 5 separated by treatment and mother
+boxplot(ratio_newdata$cs_activity ~ ratio_newdata$d5_treat*ratio_newdata$mother, horizontal = TRUE, main="CS Activity at Day 5 separated by treatment and mother", xlab = "CS Activity", ylab = "Treatment")
+
+#CS Activity at day 5 separated by mother
+boxplot(ratio_newdata$cs_activity ~ ratio_newdata$d5_treat*ratio_newdata$mother, horizontal = TRUE, main ="All CS Activity separated by mother", xlab = "CS Activity", ylab="Mother")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Below this is Jake's code to run using my data. Still needs to be fixed.
+
+```{r}
 ## Jake's Enzyme and Hematocrit Data Analysis Code, using ANOVA
 #change the file pathway to your own
 getwd()
@@ -14,6 +301,9 @@ setwd("/Users/madisonheard/github/gopher_larvae")
 
 #to run ratio activity data
 mydata = read.csv("ratio_activity_R.csv", header=TRUE,stringsAsFactors = FALSE)
+mydata
+
+mydata<-mydata[,1:5]
 mydata
 ```
 
@@ -35,8 +325,8 @@ library(dplyr)
 group_by(mydata, mother) %>%
      summarize(
          count = n(),
-         mean = mean(Average, na.rm=TRUE),
-         sd = sd(Average, na.rm=TRUE)
+         mean = mean(ratio_activity, na.rm=TRUE),
+         sd = sd(ratio_activity, na.rm=TRUE)
      )
 #to create a table with only ratio_activity, mother and the larval treatment columns
 ratio<-mydata%>%
@@ -45,9 +335,23 @@ View(ratio)
 
 ```
 
+
+```{r}
+boxplot(sd~mydata$mother)
+```
+
+
+
+
+
+
 ```{r}
 #STILL NEED TO FIX THE REST OF THIS CODE
 ## To manually reorder the treatments in the boxplot:
+
+
+mydata$mother = factor(mydata$mother)
+boxplot(ratio_activity ~ mother, mydata)
 
 mydata$Treatment = factor(mydata$Treatment,c("C","M","E","R","U")) 
     

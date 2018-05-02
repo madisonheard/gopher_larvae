@@ -7,6 +7,37 @@ output: html_document
 
 ```{r}
 #to run analysis on ratio
-sp.ratio<-read.csv("ratio_activity_R.csv")
+sp.ratio<-read.csv("ratio_capstone.csv")
+View(sp.ratio)
+#if there are a extra columns present in the file
+sp.ratio<-sp.ratio[,1:5]
+names(sp.ratio)
+
+#remove NAs here
+#newdata<-na.omit(sp.ratio)
+#for all data file this might work in getting rid of the cross categories
+#newdat<-newdata[newdata$d1_treat!="cross" & newdata$d5_treat!="cross",]
+
+
+library(lattice)  # Can only list one package at a time
+library(car)
+with(sp.oats, xyplot(yield ~ nitroF | variety))
+
+
+```
+
+
+
+
+
+#anova for a split-plot design: response var~
+```{r}
+model<-aov(ratio_activity~factor(d1_treat)*factor(d5_treat)+Error(mother/factor(d1_treat)),data=sp.ratio)
+summary(model)
+interaction.plot(sp.ratio$d5_treat,sp.ratio$d1_treat,sp.ratio$ratio_activity)
+```
+
+
+
 ```
 
