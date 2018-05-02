@@ -4,8 +4,9 @@ author: "Maddie Heard"
 date: "4/30/2018"
 output: html_document
 ---
-
+http://www.personal.psu.edu/mar36/stat_461/split_plot/split_plot.html
 ```{r}
+
 #to run analysis on ratio
 sp.ratio<-read.csv("ratio_capstone.csv")
 View(sp.ratio)
@@ -14,7 +15,7 @@ sp.ratio<-sp.ratio[,1:5]
 names(sp.ratio)
 
 #remove NAs here
-#newdata<-na.omit(sp.ratio)
+newdata<-na.omit(sp.ratio)
 #for all data file this might work in getting rid of the cross categories
 #newdat<-newdata[newdata$d1_treat!="cross" & newdata$d5_treat!="cross",]
 
@@ -32,7 +33,7 @@ with(sp.oats, xyplot(yield ~ nitroF | variety))
 
 #anova for a split-plot design: response var~
 ```{r}
-model<-aov(ratio_activity~factor(d1_treat)*factor(d5_treat)+Error(mother/factor(d1_treat)),data=sp.ratio)
+model<-aov(ratio_activity~factor(d1_treat)*factor(d5_treat)+Error(mother/factor(d1_treat)),data=newdata)
 summary(model)
 interaction.plot(sp.ratio$d5_treat,sp.ratio$d1_treat,sp.ratio$ratio_activity)
 ```

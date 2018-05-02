@@ -62,7 +62,7 @@ G91=cs_newdata$cs_activity[cs_newdata$mother=="G91"]
 #Activity at day 1 seaparated by mother and treatment
 ```{r}
 #figure out what this extra space is from maybe 
-boxplot(cs_newdata$cs_activity~cs_newdata$d1_treat*cs_newdata$mother, horizontal = TRUE, main ="CS Activity at birth separated by Mother", xlab = "CS Activity", ylab="Mother")
+boxplot(cs_newdata$cs_activity~cs_newdata$d1_treat)#*cs_newdata$mother, horizontal = TRUE, main ="CS Activity at birth separated by Mother", xlab = "CS Activity", ylab="Mother")
 ```
 
 
@@ -76,14 +76,26 @@ boxplot(cs_newdata$cs_activity ~ cs_newdata$mother, horizontal = TRUE, main ="Al
 
 #Activity at Day 1 separated by treatment
 ```{r}
-boxplot(cs_newdata$cs_activity ~ cs_newdata$d1_treat, horizontal = TRUE, main="CS Activity at Day 1 separated by treatment", xlab = "CS Activity", ylab = "Treatment")
+boxplot(cs_newdata$cs_activity ~ cs_newdata$d1_treat*cs_newdata$mother, horizontal = TRUE, main="CS Activity at Day 1 separated by treatment", xlab = "CS Activity", ylab = "Treatment")
 ```
 
 
 
-#Activity at Day 1 separated by treatment
+#Using Base R - Activity at Day 1 separated by treatment
 ```{r}
 boxplot(cs_newdata$cs_activity ~ cs_newdata$d1_treat, horizontal = TRUE, main="CS Activity at Day 1 separated by treatment", xlab = "CS Activity", ylab = "Treatment")
+```
+
+Activity at Day 1 separated by treatment and mother
+```{r}
+library(ggplot2)
+ggplot(data=cs_newdata,aes(y=cs_activity,x=d1_treat))+
+  geom_boxplot(aes(color=mother))+
+  ggtitle("CS Activity on day 1 by mother and treatment")+
+  xlab("Treatment")+
+  ylab("CS Activity")+
+  theme_bw()
+ggsave("cs_d1_treat_mother.pdf",width=8, height=5)
 ```
 
 
@@ -100,6 +112,15 @@ boxplot(cs_newdata$cs_activity ~ cs_newdata$d5_treat, horizontal = TRUE, main="C
 boxplot(cs_newdata$cs_activity ~ cs_newdata$d5_treat*cs_newdata$mother, horizontal = TRUE, main="CS Activity at Day 5 separated by treatment and mother", xlab = "CS Activity", ylab = "Treatment")
 ```
 
+```{r}
+library(ggplot2)
+ggplot(data=cs_newdata,aes(y=cs_activity,x=d5_treat))+
+  geom_boxplot(aes(color=mother))+
+  ggtitle("CS Activity on day 5 by mother and treatment")+
+  xlab("Treatment")+
+  ylab("CS Activity")+
+  theme_bw()
+```
 
 
 #CS Activity at day 5 separated by mother
