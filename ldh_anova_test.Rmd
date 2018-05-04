@@ -13,7 +13,7 @@ library(tidyverse)
 
 Read in data
 ```{r}
-ldh<-read_csv("ldh_activity_R.csv")
+ldh<-read_csv("ldh_capstone.csv")
 View(ldh)
 ldh<-ldh[,1:5]
 names(ldh)
@@ -66,5 +66,9 @@ Try running ANOVA on full dataset - **this works**, but it's not filtered by mot
 ```{r}
 model<-aov(data=ldh,ldh_activity~factor(d1_treat)*factor(mother))
 anova(model)
+```
+
+```{r}
+TukeyHSD(model)
 ```
 

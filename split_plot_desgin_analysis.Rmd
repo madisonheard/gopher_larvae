@@ -32,10 +32,23 @@ with(sp.oats, xyplot(yield ~ nitroF | variety))
 
 
 #anova for a split-plot design: response var~
+"Sometimes you might be unlucky enough to get this error when you try to specify your aov() object. It’s not the end of the world, it just means that you don’t have an observation for every between-subjects condition for every participant. This can happen due to a bug in your programming, a participant being noncompliant, data trimming after the fact, or a whole host of other reasons. The moral of the story, though, is that you need to find the participant that is missing data and drop him or her from this analysis for the error to go away. Or, if the idea of dropping a participant entirely rubs you the wrong way, you could look into conducting the analysis as a linear mixed model. We don’t have a tutorial for that (yet!), but keep your eyes peeled: as soon as it’s written, we’ll update this post and link you to it!
+
+https://www.r-bloggers.com/two-way-anova-with-repeated-measures/
+
+
+I agree and would suggest that you fit your model using a linear mixed model using the lme4 package. If you are tied to the ANOVA framework, look for missing values and delete them. Simply using na.omit() or which(complete.cases()) won't accomplish this, as it does it by row. And your data are in long format, so it won't delete a participant if they have any missing data." 
+- quote from StackOverflow 
+
 ```{r}
-model<-aov(ratio_activity~factor(d1_treat)*factor(d5_treat)+Error(mother/factor(d1_treat)),data=newdata)
+newdata$mom<-c(rep(1,13),rep(2,12),rep(1,11), rep(2,8))
+newdata$trt<-
+
+interaction.plot(newdata$d5_treat,newdata$d1_treat,newdata$ratio_activity)
+model<-aov(ratio_activity~factor(d1_treat)*factor(d5_treat)+Error(factor(mom)/factor(d1_treat)),data=newdata)
 summary(model)
-interaction.plot(sp.ratio$d5_treat,sp.ratio$d1_treat,sp.ratio$ratio_activity)
+model<-aov(ratio_activity~factor(d1_treat)*factor(d5_treat),data=newdata)
+summary(model)
 ```
 
 
