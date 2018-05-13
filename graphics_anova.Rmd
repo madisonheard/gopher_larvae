@@ -1,5 +1,5 @@
 ---
-title: "Enzyme Activity Analysis Scrip"
+title: "Enzyme Activity Analysis Script"
 author: "Maddie Heard"
 date: "4/30/2018"
 output: html_document
@@ -8,6 +8,7 @@ output: html_document
 #Load your data! If analyzing day 1, use a subset of data with only day 1 values because na.omit will remove these values from the analysis. For analyzing day 5 you can keep all data because the day 1 values will be removed once you na.omit.
 ```{r}
 activity<-read.csv(file.choose())
+#d1<-activity
 d5<-activity
 summary(d5)
 names(d5)
@@ -19,11 +20,16 @@ length(d5)
 #Summary stats and tests for normality!
 ```{r}
 #this shows the normality of the data (p<0.05 means data is not normal - must transform!)
-shapiro.test(d5$cs_activity)
+#CS - sqrt works 
+#LDH - 
+xform = sqrt
+shapiro.test(xform(d5$ratio_activity))
 #this also shows normality. The more points on the line the more normal data is.
-qqnorm(d5$cs_activity)
-qqline(d5$cs_activity)
-hist(d5$cs_activity)
+qqnorm(xform(d5$ldh_activity))
+qqline(xform(d5$cs_activity))
+hist(xform(d5$ratio_activity))
+mean(xform(d5$cs_activity))
+sd(xform(d5$cs_activity))
 ```
 
 
@@ -31,6 +37,7 @@ There are a lot of NA's at the end of this data frame so let's remove them....
 
 #remove NAs from data
 ```{r}
+#may not need this?
 d5_na<-na.omit(d5)
 #check to see if NAs still remain
 View(d5_na)
@@ -39,10 +46,10 @@ View(d5_na)
 #summary statistics on cleaned-up data frame using base R (but also gets rid of day 1 samples)
 ```{r}
 summary(d5_na)
-summary(d5_na$cs_activity)
+summary(d1$cs_activity)
 mean(d5_na$cs_activity)
 sd(d5_na$cs_activity)
-hist(d5_na$cs_activity, main = "Histogram of CS Activity on Day 1", xlab="CS Activity (IU/gfw)")
+hist(d5_na$cs_activity, main = "Histogram of CS Activity on Day 5", xlab="CS Activity (IU/gfw)")
 ```
 
 
@@ -50,13 +57,16 @@ hist(d5_na$cs_activity, main = "Histogram of CS Activity on Day 1", xlab="CS Act
 
 #Activity at Day 1 separated by treatment and averaging over maternal variability
 ```{r}
-ggplot(data=d1_na,aes(y=ratio_activity,x=d1_treat))+
-  geom_boxplot(aes(color=d1_treat))+
-  ggtitle("Ratio Activity on Day 1 by Treatment")+ #change enzyme name
+library(ggplot2)
+ggplot(data=d5_na,aes(y=sqrt(ratio_activity),x=d5_treat))+
+  geom_boxplot(aes(color=d5_treat))+
+  ggtitle("Ratio Activity on Day 5 by Treatment")+ #change enzyme name
   xlab("Treatment")+
   ylab("Ratio Activity (IU/gfw)")+ #change enzyme name
   theme_bw()
-ggsave("ratio_d1_treat.pdf",width=8, height=5) #change enzyme name
+#coord_flip makes this graph horizontal
+  #+ coord_flip()
+ggsave("cs_d1_treat.pdf",width=8, height=5) #change enzyme name
 ```
 
 
@@ -64,10 +74,10 @@ ggsave("ratio_d1_treat.pdf",width=8, height=5) #change enzyme name
 #Activity at Day 1 separated by treatment and mother
 ```{r}
 library(ggplot2)
-ggplot(data=d1_na,aes(y=ratio_activity,x=d1_treat))+
-  geom_boxplot(aes(color=mother))+
-  ggtitle("Ratio Activity on Day 1 by Mother and Treatment")+
-  xlab("Treatment")+
+ggplot(data=d5_na,aes(y=sqrt(ratio_activity),x=d5_treat))+
+  geom_boxplot(aes(color=d5_treat, mother))+
+  ggtitle("Ratio Activity on Day 5 by Mother and Treatment")+
+  xlab("Mother")+
   ylab("Ratio Activity (IU/gfw)")+
   theme_bw()
 ggsave("ratio_d1_treat_mother.pdf",width=8, height=5)
