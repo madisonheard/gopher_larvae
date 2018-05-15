@@ -112,6 +112,35 @@ ggsave("ratio_d5_treat_mother.pdf",width=8, height=5)
 ```
 
 
+#Hypothsis testing
+```{r}
+
+con = subset(d1, d1$d1_treat == "con")
+hyp = subset(d1,d1$d1_treat == "hyp")
+t.test(con$ratio_activity, hyp$ratio_activity)
+
+
+con_d5 = subset(d5_na, d5_na$d5_treat == "con")
+hyp_d5 = subset(d5_na, d5_na$d5_treat == "hyp")
+
+ratio.aov<-aov(con$ratio_activity~hyp$ratio_activity)
+summary(ratio.aov)
+
+mod<-aov(ratio_activity~d5_treat*d1_treat,data=d5_na)
+summary(mod)
+interaction.plot(d5_na$d1_treat, d5_na$d5_treat, d5_na$ratio_activity)
+
+boxplot(diff~d1_treat*d5_treat, data=d5_na)
+require(mosaic)
+mean(ratio_activity~mother,data=d1_na)
+d5_na$avg_r<-c(rep(0.4327740, 13), rep(0.3377975, 12), rep(0.1605600, 11), rep(0.2435607, 8))
+d5_na$diff<-d5_na$ratio_activity-d5_na$avg_r
+mod<-aov(diff~d5_treat*d1_treat,data=d5_na)
+summary(mod)
+interaction.plot(d5_na$d1_treat, d5_na$d5_treat, d5_na$diff)
+
+summary(d5_na)
+```
 
 
 
