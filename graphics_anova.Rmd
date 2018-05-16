@@ -58,11 +58,11 @@ hist(d5_na$cs_activity, main = "Histogram of CS Activity on Day 5", xlab="CS Act
 #Activity at Day 1 separated by treatment and averaging over maternal variability
 ```{r}
 library(ggplot2)
-ggplot(data=d5_na,aes(y=sqrt(ratio_activity),x=d5_treat))+
-  geom_boxplot(aes(color=d5_treat))+
-  ggtitle("Ratio Activity on Day 5 by Treatment")+ #change enzyme name
+ggplot(data=d1,aes(y=(ldh_activity),x=mother))+
+  geom_boxplot(aes())+
+  ggtitle("LDH Activity on Day 5 by Treatment")+ #change enzyme name
   xlab("Treatment")+
-  ylab("Ratio Activity (IU/gfw)")+ #change enzyme name
+  ylab("LDH Activity (IU/gfw)")+ #change enzyme name
   theme_bw()
 #coord_flip makes this graph horizontal
   #+ coord_flip()
