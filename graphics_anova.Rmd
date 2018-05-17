@@ -8,12 +8,14 @@ output: html_document
 #Load your data! If analyzing day 1, use a subset of data with only day 1 values because na.omit will remove these values from the analysis. For analyzing day 5 you can keep all data because the day 1 values will be removed once you na.omit.
 ```{r}
 activity<-read.csv(file.choose())
-#d1<-activity
-d5<-activity
+d1<-read.csv(file.choose())
+#d5<-activity
 summary(d5)
 names(d5)
 View(d5)
 length(d5)
+
+summary(d1$cs_activity)
 ```
 
 
@@ -45,6 +47,7 @@ View(d5_na)
 
 #summary statistics on cleaned-up data frame using base R (but also gets rid of day 1 samples)
 ```{r}
+#don't square root these
 summary(d5_na)
 summary(d1$cs_activity)
 mean(d5_na$cs_activity)
@@ -58,15 +61,17 @@ hist(d5_na$cs_activity, main = "Histogram of CS Activity on Day 5", xlab="CS Act
 #Activity at Day 1 separated by treatment and averaging over maternal variability
 ```{r}
 library(ggplot2)
-ggplot(data=d1,aes(y=(ldh_activity),x=mother))+
-  geom_boxplot(aes())+
-  ggtitle("LDH Activity on Day 5 by Treatment")+ #change enzyme name
-  xlab("Treatment")+
-  ylab("LDH Activity (IU/gfw)")+ #change enzyme name
+install.packages("wesanderson")
+library(wesanderson)
+ggplot(data=d5_na,aes(y=(ldh_activity),x=d1_treat))+
+  geom_boxplot(aes(fill=d5_treat))+
+  ggtitle("Anaerobic Activity on Day 5")+ #change enzyme name
+  xlab("Day 5 Treatment")+
+  ylab("Anaerobic Activity")+ #change enzyme name+
+  scale_x_discrete(labels=c("con" = "Control", "hyp" = "Hypoxia"))+
+  scale_fill_manual(values=c("#99CCFF", "#FF9999"))+
   theme_bw()
-#coord_flip makes this graph horizontal
-  #+ coord_flip()
-ggsave("cs_d1_treat.pdf",width=8, height=5) #change enzyme name
+ggsave("ldh_d5_d1treat.pdf",width=8, height=5) #change enzyme name
 ```
 
 
@@ -75,7 +80,7 @@ ggsave("cs_d1_treat.pdf",width=8, height=5) #change enzyme name
 ```{r}
 library(ggplot2)
 ggplot(data=d5_na,aes(y=sqrt(ratio_activity),x=d5_treat))+
-  geom_boxplot(aes(color=d5_treat, mother))+
+  geom_boxplot(aes())+
   ggtitle("Ratio Activity on Day 5 by Mother and Treatment")+
   xlab("Mother")+
   ylab("Ratio Activity (IU/gfw)")+
@@ -88,27 +93,32 @@ ggsave("ratio_d1_treat_mother.pdf",width=8, height=5)
 
 #Activity at Day 5 separated by treatment for each mother
 ```{r}
-ggplot(data=d5_na,aes(y=ratio_activity,x=d5_treat))+ #change enzyme name
-  geom_boxplot(aes(color=d5_treat, mother))+ #how to I show individual mothers that contirbuted to each treatment?
-  ggtitle("Ratio Activity on Day 5 per Treatment")+ #change enzyme name
+ggplot(data=d5_na,aes(y=ldh_activity,x=d5_treat))+ #change enzyme name
+  geom_boxplot(aes(color=d1_treat))+ #how to I show individual mothers that contirbuted to each treatment?
+  ggtitle("CS Activity on Day 5 per Treatment")+ #change enzyme name
   xlab("Treatment")+
-  ylab("Ratio Activity (IU/gfw)")+ #change enzyme name
+  ylab("CS Activity (IU/gfw)")+ #change enzyme name
   theme_bw()
-ggsave("ratio_d5_treatmom.pdf",width=8, height=5) #change enzyme name
+ggsave("cs_d5_d1treat.pdf",width=8, height=5) #change enzyme name
 ```
 
 
 
 #Activity at Day 5 separated by treatment and mother
 ```{r}
+install.packages("wesanderson")
+library(wesanderson)
 library(ggplot2)
-ggplot(data=d5_na,aes(y=ratio_activity,x=d5_treat))+
-  geom_boxplot(aes(color=mother))+
-  ggtitle("Ratio Activity on Day 5 by Mother and Treatment")+
+ggplot(data=d5_na,aes(y=ldh_activity,x=d5_treat))+
+  geom_boxplot(aes(color=d1_treat))+
+  ggtitle("LDH Activity on Day 5 by Mother and Treatment")+
   xlab("Treatment")+
-  ylab("Ratio Activity")+
+  ylab("Anaerobic Activity")+
   theme_bw()
-ggsave("ratio_d5_treat_mother.pdf",width=8, height=5)
+
+
+
+ggsave("ldh_d5_d1treat_use.pdf",width=8, height=5)
 ```
 
 
@@ -117,7 +127,7 @@ ggsave("ratio_d5_treat_mother.pdf",width=8, height=5)
 
 con = subset(d1, d1$d1_treat == "con")
 hyp = subset(d1,d1$d1_treat == "hyp")
-t.test(con$ratio_activity, hyp$ratio_activity)
+t.test(con$ldh_activity, hyp$ldh_activity)
 
 
 con_d5 = subset(d5_na, d5_na$d5_treat == "con")
@@ -126,10 +136,12 @@ hyp_d5 = subset(d5_na, d5_na$d5_treat == "hyp")
 ratio.aov<-aov(con$ratio_activity~hyp$ratio_activity)
 summary(ratio.aov)
 
-mod<-aov(ratio_activity~d5_treat*d1_treat,data=d5_na)
+mod<-aov(ratio_activity~d5_treat*d1_treat,data=d5)
 summary(mod)
 interaction.plot(d5_na$d1_treat, d5_na$d5_treat, d5_na$ratio_activity)
 
+#judith's work to find differences
+####
 boxplot(diff~d1_treat*d5_treat, data=d5_na)
 require(mosaic)
 mean(ratio_activity~mother,data=d1_na)
@@ -137,9 +149,21 @@ d5_na$avg_r<-c(rep(0.4327740, 13), rep(0.3377975, 12), rep(0.1605600, 11), rep(0
 d5_na$diff<-d5_na$ratio_activity-d5_na$avg_r
 mod<-aov(diff~d5_treat*d1_treat,data=d5_na)
 summary(mod)
-interaction.plot(d5_na$d1_treat, d5_na$d5_treat, d5_na$diff)
+####
 
-summary(d5_na)
+interaction.plot(d5_na$d1_treat, d5_na$d5_treat,d5_na$cs_activity)
+
+
+#anova for activities!
+test<-aov(data=d5_na,(ldh_activity)~factor(d5_treat)*factor(d1_treat))
+summary(test)
+
+test<-aov(data=d5_na,sqrt(cs_activity)~factor(d1_treat)*factor(mother))
+summary(test)
+
+#potential trend in interaction between d1 to d5 for cs - interaction between timepoints
+#by day 5 we aren't seeing any significant but at day 1 we are seeing significance for both cs and ldh 
+#mother isn't significant at day 5 for CS or LDH
 ```
 
 
