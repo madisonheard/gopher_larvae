@@ -63,15 +63,15 @@ hist(d5_na$cs_activity, main = "Histogram of CS Activity on Day 5", xlab="CS Act
 library(ggplot2)
 install.packages("wesanderson")
 library(wesanderson)
-ggplot(data=d5_na,aes(y=(ldh_activity),x=d1_treat))+
-  geom_boxplot(aes(fill=d5_treat))+
-  ggtitle("Anaerobic Activity on Day 5")+ #change enzyme name
-  xlab("Day 5 Treatment")+
-  ylab("Anaerobic Activity")+ #change enzyme name+
-  scale_x_discrete(labels=c("con" = "Control", "hyp" = "Hypoxia"))+
-  scale_fill_manual(values=c("#99CCFF", "#FF9999"))+
-  theme_bw()
-ggsave("ldh_d5_d1treat.pdf",width=8, height=5) #change enzyme name
+ ggplot(data=d5_na,aes(y=(ratio_activity),x=d1_treat))+ 
+   geom_boxplot(aes(fill=d5_treat))+
+   ggtitle("Metabolic Poise on Day 5")+ #change enzyme name
+   xlab("Mother Treatment")+
+   ylab("Ratio Activity (IU/gfw)")+ #change enzyme name+
+   scale_x_discrete(labels=c("con" = "Control", "hyp" = "Hypoxia"))+
+   scale_fill_manual(values=c("#CCFFCC","#99CCFF"),name="Legend",labels=c("Day 5 Control", "Day 5 Hypoxia"))+
+   theme_bw()
+ggsave("ratio_d5_PAPER.pdf",width=8, height=5) #change enzyme name
 ```
 
 
@@ -155,10 +155,10 @@ interaction.plot(d5_na$d1_treat, d5_na$d5_treat,d5_na$cs_activity)
 
 
 #anova for activities!
-test<-aov(data=d5_na,(ldh_activity)~factor(d5_treat)*factor(d1_treat))
+test<-aov(data=d1,sqrt(ratio_activity)~factor(d1_treat)*factor(mother))
 summary(test)
 
-test<-aov(data=d5_na,sqrt(cs_activity)~factor(d1_treat)*factor(mother))
+test<-aov(data=d5_na,sqrt(ldh_activity)~factor(d5_treat)*factor(d1_treat))
 summary(test)
 
 #potential trend in interaction between d1 to d5 for cs - interaction between timepoints
