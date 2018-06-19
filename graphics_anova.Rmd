@@ -12,7 +12,7 @@ d1<-read.csv(file.choose())
 #d5<-activity
 summary(d5)
 names(d5)
-View(d5)
+View(d1)
 length(d5)
 
 summary(d1$cs_activity)
@@ -79,11 +79,13 @@ ggsave("ratio_d5_PAPER.pdf",width=8, height=5) #change enzyme name
 #Activity at Day 1 separated by treatment and mother
 ```{r}
 library(ggplot2)
-ggplot(data=d5_na,aes(y=sqrt(ratio_activity),x=d5_treat))+
-  geom_boxplot(aes())+
-  ggtitle("Ratio Activity on Day 5 by Mother and Treatment")+
-  xlab("Mother")+
-  ylab("Ratio Activity (IU/gfw)")+
+ggplot(data=d1,aes(y=(ldh_activity),x=mother))+
+  geom_boxplot(aes(fill=d1_treat))+
+  ggtitle("LDH Activity on Day 1 by Mother and Treatment")+
+  xlab("Rockfish Mother")+
+  ylab("LDH Activity (IU/gfw)")+
+  scale_x_discrete(labels=c("G72" = "Mother 1", "G73" = "Mother 2", "G79" = "Mother 3", "G91" = "Mother 4"))+
+  scale_fill_manual(values=c("#CCFFCC","#99CCFF"),name="Legend",labels=c("Control", "Hypoxia"))+
   theme_bw()
 ggsave("ratio_d1_treat_mother.pdf",width=8, height=5)
 ```
