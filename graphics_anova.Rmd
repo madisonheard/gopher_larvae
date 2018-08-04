@@ -14,6 +14,7 @@ summary(d5)
 names(d5)
 View(d1)
 length(d5)
+View(activity)
 
 summary(d1$cs_activity)
 ```
@@ -63,13 +64,14 @@ hist(d5_na$cs_activity, main = "Histogram of CS Activity on Day 5", xlab="CS Act
 library(ggplot2)
 install.packages("wesanderson")
 library(wesanderson)
- ggplot(data=d5_na,aes(y=(ratio_activity),x=d1_treat))+ 
-   geom_boxplot(aes(fill=d5_treat))+
-   ggtitle("Metabolic Poise on Day 5")+ #change enzyme name
+library(ggplot2)
+ ggplot(data=activity,aes(y=(cs_activity),x=d1_treat))+ 
+   geom_boxplot(aes(fill=d1_treat))+
+   ggtitle("Aerobic Metabolism on Day 1")+ #change enzyme name
    xlab("Mother Treatment")+
    ylab("Ratio Activity (IU/gfw)")+ #change enzyme name+
    scale_x_discrete(labels=c("con" = "Control", "hyp" = "Hypoxia"))+
-   scale_fill_manual(values=c("#CCFFCC","#99CCFF"),name="Legend",labels=c("Day 5 Control", "Day 5 Hypoxia"))+
+   scale_fill_manual(c("gray100","gray85"),name="Legend",labels=c("Day 5 Control", "Day 5 Hypoxia"))+
    theme_bw()
 ggsave("ratio_d5_PAPER.pdf",width=8, height=5) #change enzyme name
 ```
@@ -79,13 +81,13 @@ ggsave("ratio_d5_PAPER.pdf",width=8, height=5) #change enzyme name
 #Activity at Day 1 separated by treatment and mother
 ```{r}
 library(ggplot2)
-ggplot(data=d1,aes(y=(ldh_activity),x=mother))+
+ggplot(data=d1,aes(y=(cs_activity),x=mother))+
   geom_boxplot(aes(fill=d1_treat))+
-  ggtitle("LDH Activity on Day 1 by Mother and Treatment")+
+  ggtitle("CS Activity on Day 1 by Mother and Treatment")+
   xlab("Rockfish Mother")+
-  ylab("LDH Activity (IU/gfw)")+
+  ylab("CS Activity (IU/gfw)")+
   scale_x_discrete(labels=c("G72" = "Mother 1", "G73" = "Mother 2", "G79" = "Mother 3", "G91" = "Mother 4"))+
-  scale_fill_manual(values=c("#CCFFCC","#99CCFF"),name="Legend",labels=c("Control", "Hypoxia"))+
+  scale_fill_manual(values=c("darkseagreen1","skyblue2"),name="Legend",labels=c("Control", "Hypoxia"))+
   theme_bw()
 ggsave("ratio_d1_treat_mother.pdf",width=8, height=5)
 ```
